@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="1 minute">
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				<!-- %replace(%m){'\n', '\\n'} reemplaza los enters del mensaje por el texto \n-->
+				<!-- %replace(%m){'\b1000:[a-f0-9]{16,}:[a-f0-9]{16,}\b', 'xxxDSSxxx'} reemplaza las dss del mensaje por xxxDSSxxx-->
+				<!-- %replace(%ex){'(?s)^(.+)$',' '} pone un espacio entre mensaje y excepción solo si hay una excepción-->
+				<!-- %replace(%ex){'\n', '\\n'} reemplaza los enters de la excepción (incluyendo el stack trace completo) por el texto \n-->
+				%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX", UTC} %-4p [${HOSTNAME}] [%X{uow}] [%X{requestId}] [%thread] [%logger{4}:%line] : %replace(%replace(%m){'\n', '\\n'}){'\b1000:[a-f0-9]{16,}:[a-f0-9]{16,}\b', 'xxxDSSxxx'}%replace(%ex){'(?s)^(.+)$',' '}%replace(%ex){'\n', '\\n'}%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="console" />
+	</root>
+</configuration>

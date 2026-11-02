@@ -1,0 +1,38 @@
+# lines starting with # are comments
+# parsed with  grep -vE "^\s*#" jvm-args | tr '\n' ' '
+
+# Greenwich Mean Time to avoid summertime changes
+-Duser.timezone=GMT-0
+
+# new relic settings
+-javaagent:/app/agents/newrelic-agent.jar
+-Dnewrelic.config.file=/service/config/newrelic/newrelic.yml
+
+# logback settings
+-Dlogging.config=/service/config/logback.xml
+
+# prometheus settings
+-javaagent:/app/agents/jmx_prometheus_javaagent.jar=9800:/service/config/prometheus/config.yaml
+
+# memory settings
+-Xms1024m
+-Xmx1024m
+-XX:MetaspaceSize=128M
+-XX:MaxMetaspaceSize=256M
+-XX:+AlwaysPreTouch
+
+# garbage collector settings
+-XX:+UseG1GC
+-Xlog:gc*,safepoint:/app/logs/garbageCollector.log::filecount=5,filesize=100M
+
+# always show stack trace
+-XX:-OmitStackTraceInFastThrow
+
+# heap dump settings
+# for now this option is not available in nebula
+
+# refresh dns cache (helps when database or any external connection fallbacks to a different host)
+-Dnetworkaddress.cache.ttl=60
+
+# faster non blocking random number generator
+-Djava.security.egd=file:/dev/./urandom

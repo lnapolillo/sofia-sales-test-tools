@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+VERSION=$1
+
+echo $VERSION > version
+
+git commit -m "tag $VERSION" version
+
+git push
+
+git tag -a "$VERSION" -m "Tagging $VERSION"
+
+git push --tag

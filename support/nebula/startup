@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Enable Jemalloc for better native memory managment in apps with static threadpools
+# https://discourse.despegar.com/t/problemas-de-memoria-off-heap-aca-puede-estar-tu-solucion/2112/2
+LIBJMALLOC_PATH=$(find /lib /usr/lib /usr/local/lib /opt -name "libjemalloc.so" -print -quit)
+if [ -n "$LIBJMALLOC_PATH" ]; then
+  echo "Found libjemalloc.so at: $LIBJMALLOC_PATH"
+else
+  echo "libjemalloc.so not found in standard library directories or custom paths."
+  exit 1
+fi
+export LD_PRELOAD=$LIBJMALLOC_PATH
+
+JVM_ARGS=$(grep -vE "^\s*#" /service/config/jvm-args | tr '\n' ' ')
+
+echo $JVM_ARGS
+
+# Bash does not forward signals like SIGTERM to processes it is currently waiting on. 
+# If you want to end your script by segueing into your application (allowing it to handle signals 
+# and anything else, as if you had started the application directly), you should use exec, 
+# which will replace the shell with the process being opened
+exec java $JVM_ARGS -jar java-template.jar

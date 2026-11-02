@@ -1,0 +1,32 @@
+---
+service: java-template
+name: java-template-20220118
+containers:
+  - resources:
+      cpu:
+        request: 0.5
+      ram:
+        request: 2
+        unit: Gi
+      disk:
+        request: 1
+        unit: Gi
+    configuration:
+      origin_path: configuration/nebula
+      repository_name: java-template
+desired_size: 1
+environment: test
+health_check:
+  initial_delay_seconds: 150
+  timeout_seconds: 3
+termination_grace_period_seconds: 30
+active: true
+traffic_rollout:
+  percentage: 50
+  waiting_seconds: 10
+metric_config:
+  runtime: jvm
+  custom_metric: false
+new_relic_credentials:
+  application_name: <your-application-name>
+  license_key: <your-license-key>

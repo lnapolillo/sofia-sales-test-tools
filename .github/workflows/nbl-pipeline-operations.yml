@@ -1,0 +1,28 @@
+# Read more about Nebula Actions at: https://github.com/despegar/nebula-onboarding/wiki/CICD
+name: Nebula Pipeline Operations
+
+on:
+  workflow_dispatch:
+    inputs:
+      pipeline_id:
+        description: 'Pipeline ID'
+        required: true
+        type: string
+      operation:
+        description: 'Operation to perform on the pipeline'
+        required: true
+        type: choice
+        options:
+          - resume-pipeline
+          - stop-pipeline
+
+jobs: 
+
+  pipeline-operations:
+    uses: despegar/nebula-actions/.github/workflows/reusable-pipeline-operations.yml@main
+    secrets: inherit
+    with:
+      service: '' # Add your service name
+      pipeline_id: ${{ github.event.inputs.pipeline_id }}
+      operation: ${{ github.event.inputs.operation }}
+      notify: true

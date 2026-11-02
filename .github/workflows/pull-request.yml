@@ -1,0 +1,42 @@
+name: Pull request
+
+env:
+  # JAVA debería ser consistente con el que se usa en el pom.xml
+  JAVA_VERSION: 21
+  # MAVEN_VERSION debería ser consistente con el que se usa en el pom.xml (enforcer-required-maven-version=3.8.8)
+  MAVEN_VERSION: 3.9.6
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-tests:
+    # Runners disponibles: https://github.com/despegar/nebula-onboarding/wiki/CICD#ci---continuous-integration-runners-de-github-actions
+    runs-on: nbl-arm64-basic
+    continue-on-error: false
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        # README: https://github.com/despegar/actions/tree/main/setup-java
+        uses: despegar/actions/setup-java@main
+        with:
+          version: ${{ env.JAVA_VERSION }}
+          cache: maven
+          maven-version: ${{ env.MAVEN_VERSION }}
+
+      - name: Print Java version
+        run: java -version
+
+      - name: Print Maven version
+        run: mvn -version
+
+      - name: Compile
+        run: mvn clean --batch-mode compile
+
+      - name: Test
+        run: mvn --batch-mode test

@@ -1,0 +1,71 @@
+# Read more about Nebula Actions at: https://github.com/despegar/nebula-onboarding/wiki/CICD
+name: Nebula Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+        version:
+          description: 'Release Tag'
+          required: true
+          type: string
+          # You can set a default one if wanted:
+          # default: 1.0.0
+        config_tag:
+          description: 'Config Tag'
+          required: false
+          type: string
+          # You can set a default one if wanted:
+          # default: 1.0.0
+        environment:
+          description: 'Nebula Environment'
+          required: true
+          type: choice
+          options:
+            - test
+            - sandbox
+            - prod
+        deployment_group:
+          description: 'Deployment Group, default is the same as the environment'
+          required: false
+          type: string
+        deployment_template:
+          description: 'Deployment Template, if not provided, the default will be used'
+          required: false
+          type: string
+          # You can also use a pre-loaded list instead of a string input if you use fixed ones
+          # type: choice
+          # options: # Include any previously created deployment templates if you often replace the default one
+          #  - ''
+          #  - 'test-example-template-override' # Replace with previously created deployment template
+          #  - 'sandbox-example-template-override' # Replace with previously created deployment template
+          #  - 'prod-example-template-override' # Replace with previously created deployment template
+        jira_release:
+          description: 'Jira Release, required for prod'
+          required: false
+          type: string
+        notify: # This will notify the build to your chat (if configured)
+          description: 'Notify to Chat'
+          required: true
+          type: boolean
+          default: true # You may want to change this
+
+run-name: Nebula Deploy ${{ github.event.inputs.version }} to ${{ github.event.inputs.deployment_group || github.event.inputs.environment }}
+
+jobs: 
+  deploy:
+    uses: despegar/nebula-actions/.github/workflows/reusable-deploy.yml@main
+    secrets: inherit
+    with:
+      service: '' # Add your service
+      tag: ${{ github.event.inputs.version }}
+      # If config is in the same repo, use this option:
+      # It will use a config tag if provided, otherwise it will use the same tag as the service
+      config_tag: ${{ github.event.inputs.config_tag || github.event.inputs.version }}
+      # If you use a different repo for configs, use this instead:
+      # config_tag: ${{ github.event.inputs.config_tag }} # The config tag is different from the service tag
+      environment: ${{ github.event.inputs.environment }}
+      deployment_group: ${{ github.event.inputs.deployment_group }}
+      deployment_template: ${{ github.event.inputs.deployment_template }}
+      jira_project: '' # Add your jira Project in this format (eg: JIRPRO)
+      jira_release: ${{ github.event.inputs.jira_release }}
+      notify: ${{ github.event.inputs.notify == 'true' }} # Beware that inputs are strings even if they are booleans

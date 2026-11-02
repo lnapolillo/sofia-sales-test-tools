@@ -1,0 +1,20 @@
+# Read more about Nebula Actions at: https://github.com/despegar/nebula-onboarding/wiki/CICD
+name: Nebula Build
+
+on:
+  release:
+    types: [published]
+
+run-name: Nebula Build ${{ github.event.release.tag_name }}
+
+jobs: 
+
+  build:
+    uses: despegar/nebula-actions/.github/workflows/reusable-build.yml@main
+    secrets: inherit
+    with:
+      service: '' # Add your service name
+      tag: ${{ github.event.release.tag_name }}
+      # architecture: 'arm64' # Uncomment if you need to override the default architecture (arm64, amd64)
+      # static_content_path: '' # Uncomment if you need to override the default static content path indicated in the service
+      notify: true # This will notify the build to your chat (if configured)

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -x
+
+VERSION=$1
+
+PROJECT_ROOT="$(dirname "$0")"
+
+NEXUS_REPOSITORY=maven-snapshots
+NEXUS_URL=https://artifacts.us-east-1.despegar.net/dependencies/repository/${NEXUS_REPOSITORY}
+
+GROUP_ID=$(mvn -f "${PROJECT_ROOT}"/pom.xml -q \
+    -Dexec.executable=echo \
+    -Dexec.args='${project.groupId}' \
+    --non-recursive \
+    exec:exec)
+
+ARTIFACT_ID=$(mvn -f "${PROJECT_ROOT}"/pom.xml -q \
+    -Dexec.executable=echo \
+    -Dexec.args='${project.artifactId}' \
+    --non-recursive \
+    exec:exec)
+
+TAR_NAME="${ARTIFACT_ID}"-"${VERSION}".tar
+
+"${PROJECT_ROOT}"/build ${VERSION}
+
+mvn deploy:deploy-file -DgroupId="${GROUP_ID}" \
+                -DartifactId="${ARTIFACT_ID}" \
+                -Dversion="${VERSION}" \
+                -Dpackaging=tar \
+                -DrepositoryId="${NEXUS_REPOSITORY}" \
+                -Durl="${NEXUS_URL}" \
+                -Dfile="${PROJECT_ROOT}"/target/"${TAR_NAME}"
+
