@@ -78,7 +78,7 @@ USER $NBL_USER_ID
 
 # En este caso, copiamos de la imagen descartable el jar generado y el jar de newrelic a usar como agent que necesitamos en la imagen
 # HELP: COPY <archivo_de_directorio_de_build> <destino_dentro_de_la_imagen_*final*>
-COPY --from=build /app/target/java-template.jar java-template.jar
+COPY --from=build /app/target/sofia-sales-test-tools.jar sofia-sales-test-tools.jar
 
 # Copiamos el agente de newrelic actualizado que se descargó en la etapa de build.
 COPY --from=build /app/target/external-jars/newrelic-agent.jar agents/newrelic-agent.jar

@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.despegar</groupId>
-    <artifactId>java-template</artifactId>
+    <artifactId>sofia-sales-test-tools</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>

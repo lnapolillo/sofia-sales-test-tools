@@ -19,4 +19,4 @@ echo $JVM_ARGS
 # If you want to end your script by segueing into your application (allowing it to handle signals 
 # and anything else, as if you had started the application directly), you should use exec, 
 # which will replace the shell with the process being opened
-exec java $JVM_ARGS -jar java-template.jar
+exec java $JVM_ARGS -jar sofia-sales-test-tools.jar

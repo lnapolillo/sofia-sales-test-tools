@@ -1,6 +1,6 @@
 ---
-service: java-template
-name: java-template-20220118
+service: sofia-sales-test-tools
+name: sofia-sales-test-tools-20220118
 containers:
   - resources:
       cpu:
@@ -13,7 +13,7 @@ containers:
         unit: Gi
     configuration:
       origin_path: configuration/nebula
-      repository_name: java-template
+      repository_name: sofia-sales-test-tools
 desired_size: 1
 environment: test
 health_check:
