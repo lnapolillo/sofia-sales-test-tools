@@ -27,7 +27,7 @@ public class FlightDurationService {
         this.geoService = geoService;
     }
 
-    public Duration get(String origin, String destination) {
+    public Duration getDuration(String origin, String destination) {
         Location from = resolveLocation(origin);
         Location to = resolveLocation(destination);
         double distanceKm = haversine(

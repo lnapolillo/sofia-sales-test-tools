@@ -26,8 +26,8 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration xClientRegistration = registry.addInterceptor(xClientInterceptor);
-        xClientRegistration.excludePathPatterns(staticPathsToExclude);
+//        InterceptorRegistration xClientRegistration = registry.addInterceptor(xClientInterceptor);
+//        xClientRegistration.excludePathPatterns(staticPathsToExclude);
 
         InterceptorRegistration xServiceRegistration = registry.addInterceptor(xServiceInterceptor);
         xServiceRegistration.excludePathPatterns(staticPathsToExclude);

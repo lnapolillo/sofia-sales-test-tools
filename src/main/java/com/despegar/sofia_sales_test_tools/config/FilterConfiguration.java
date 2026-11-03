@@ -3,6 +3,7 @@ package com.despegar.sofia_sales_test_tools.config;
 import com.despegar.sofia_sales_test_tools.config.compression.CompressionFilter;
 import com.despegar.sofia_sales_test_tools.util.newrelic.NewRelicTransactionManager;
 import com.despegar.sofia_sales_test_tools.util.web.filter.AccessFilter;
+import com.despegar.sofia_sales_test_tools.util.web.filter.LoggingFilter;
 import com.despegar.sofia_sales_test_tools.util.web.filter.NewRelicFilter;
 import com.despegar.library.routing.filter.RoutingFilter;
 import jakarta.servlet.Filter;
@@ -21,6 +22,7 @@ public class FilterConfiguration {
     private static final int COMPRESSION_FILTER_ORDER = 2;
     private static final int ACCESS_FILTER_ORDER = 3;
     private static final int NEW_RELIC_FILTER_ORDER = 4;
+    private static final int LOGGING_FILTER_ORDER = 5;
 
     @Bean
     public FilterRegistrationBean<Filter> routingFilter(@Value("${project.artifactId}") String artifactId,
@@ -32,6 +34,13 @@ public class FilterConfiguration {
     public FilterRegistrationBean<Filter> accessFilter(
             @Value("#{'${routing.static.paths.to.exclude}'}") List<String> ignoredPaths) {
         return initializeFilterRegistrationBean(new AccessFilter(ignoredPaths), ACCESS_FILTER_ORDER, ALL_URL);
+    }
+
+    @Bean
+    public FilterRegistrationBean<Filter> loggingFilter(
+            @Value("#{'${routing.static.paths.to.exclude}'}") List<String> ignoredPaths,
+            @Value("#{'${logging.no-body.paths:}'.split(',')}") List<String> noBodyPaths) {
+        return initializeFilterRegistrationBean(new LoggingFilter(ignoredPaths, noBodyPaths), LOGGING_FILTER_ORDER, ALL_URL);
     }
 
     @Bean
